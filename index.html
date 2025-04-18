@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="hero-section">
+    <div class="container">
+        <h1 class="display-4">Find Your Perfect Credit Card</h1>
+        <p class="lead mb-4">Discover the best credit card that matches your lifestyle and financial goals.</p>
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card bg-light border-0">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-primary">Compare Credit Cards</h5>
+                        <div class="row mt-3">
+                            <div class="col-md-6 mb-2">
+                                <select class="form-select form-select-sm" id="card1">
+                                    <option value="">Select first card...</option>
+                                    {% for card in credit_cards %}
+                                    <option value="{{ card.id }}">{{ card.name }} ({{ card.reward_type }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <select class="form-select form-select-sm" id="card2">
+                                    <option value="">Select second card...</option>
+                                    {% for card in credit_cards %}
+                                    <option value="{{ card.id }}">{{ card.name }} ({{ card.reward_type }})</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary btn-sm mt-2" id="compareButton">Compare Cards</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="text-center mb-4">Featured Credit Cards</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for card in featured_cards %}
+        <div class="col">
+            <div class="credit-card h-100">
+                <a href="{{ url_for('view_card', card_id=card.id) }}" class="text-decoration-none">
+                    <img src="{{ card.image }}" alt="{{ card.name }} credit card image" class="card-img">
+                    <h3 class="h5 mt-3">{{ card.name }}</h3>
+                    <div class="card-tags mb-2">
+                        <span class="card-tag">
+                            ✨ {{ card.reward_type }}
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-primary">{{ card.issuer }}</span>
+                        <span class="text-accent">${{ card.annual_fee }} Annual Fee</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    $("#compareButton").click(function() {
+        const card1Id = $("#card1").val();
+        const card2Id = $("#card2").val();
+
+        if (!card1Id || !card2Id) {
+            alert('Please select two cards to compare');
+            return;
+        }
+
+        if (card1Id === card2Id) {
+            alert('Please select different cards to compare');
+            return;
+        }
+
+        window.location.href = `/compare/${card1Id}/${card2Id}`;
+    });
+});
+</script>
+{% endblock %}

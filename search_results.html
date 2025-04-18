@@ -1,0 +1,15 @@
+<h1>Results for "{{ query }}"</h1>
+
+{% if results %}
+    <ul>
+        {% for card in results %}
+            <li>
+                <a href="{{ url_for('view_card', card_id=card.id) }}">
+                    {{ card.name }} - {{ card.issuer }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p><strong>No matching credit cards found.</strong></p>
+{% endif %}

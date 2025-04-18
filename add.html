@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="form-container">
+    <div id="success-message" class="alert alert-success d-none">
+        <h4>New item successfully created!</h4>
+        <p>Your credit card has been added to our database.</p>
+        <a href="#" id="view-card-link" class="btn btn-primary">See it here</a>
+        <button class="btn btn-outline-primary" onclick="clearForm()">Add Another Card</button>
+    </div>
+
+    <h1 class="mb-4">Add New Credit Card</h1>
+    <form id="add-card-form" class="needs-validation" novalidate>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Card Name *</label>
+                <input type="text" class="form-control" id="name" required>
+                <div class="invalid-feedback">Please enter the card name</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="issuer" class="form-label">Card Issuer *</label>
+                <input type="text" class="form-control" id="issuer" required>
+                <div class="invalid-feedback">Please enter the card issuer</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="reward_type" class="form-label">Reward Type *</label>
+                <input type="text" class="form-control" id="reward_type" required>
+                <div class="invalid-feedback">Please enter the reward type</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="annual_fee" class="form-label">Annual Fee *</label>
+                <input type="number" class="form-control" id="annual_fee" min="0" required>
+                <div class="invalid-feedback">Please enter a valid annual fee (must be a number)</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="credit_score" class="form-label">Required Credit Score *</label>
+                <select class="form-select" id="credit_score" required>
+                    <option value="">Select credit score range</option>
+                    <option value="Poor">Poor (300-579)</option>
+                    <option value="Fair">Fair (580-669)</option>
+                    <option value="Good">Good (670-739)</option>
+                    <option value="Very Good">Very Good (740-799)</option>
+                    <option value="Excellent">Excellent (800-850)</option>
+                </select>
+                <div class="invalid-feedback">Please select a credit score range</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="interest_rate" class="form-label">Interest Rate Range *</label>
+                <input type="text" class="form-control" id="interest_rate" placeholder="e.g., 14.99% - 24.99%" required>
+                <div class="invalid-feedback">Please enter the interest rate range</div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="image_url" class="form-label">Card Image URL *</label>
+            <input type="url" class="form-control" id="image_url" required>
+            <div class="invalid-feedback">Please enter a valid image URL</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="apply_link" class="form-label">Application Link *</label>
+            <input type="url" class="form-control" id="apply_link" required>
+            <div class="invalid-feedback">Please enter a valid application URL</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="benefits" class="form-label">Card Benefits *</label>
+            <textarea class="form-control" id="benefits" rows="4" placeholder="Enter each benefit on a new line" required></textarea>
+            <div class="invalid-feedback">Please enter at least one benefit</div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary">Add Credit Card</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function clearForm() {
+    document.getElementById('add-card-form').reset();
+    document.getElementById('name').focus();
+}
+
+document.getElementById('add-card-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    // Form validation
+    if (!this.checkValidity()) {
+        event.stopPropagation();
+        this.classList.add('was-validated');
+        return;
+    }
+
+    // Get form data
+    const formData = {
+        name: document.getElementById('name').value.trim(),
+        issuer: document.getElementById('issuer').value.trim(),
+        reward_type: document.getElementById('reward_type').value.trim(),
+        annual_fee: document.getElementById('annual_fee').value.trim(),
+        credit_score_required: document.getElementById('credit_score').value.trim(),
+        interest_rate: document.getElementById('interest_rate').value.trim(),
+        image: document.getElementById('image_url').value.trim(),
+        apply_link: document.getElementById('apply_link').value.trim(),
+        benefits: document.getElementById('benefits').value.trim()
+    };
+
+    // Submit form data
+    fetch('/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            throw new Error(data.error);
+        }
+        // Show success message
+        document.getElementById('success-message').classList.remove('d-none');
+        document.getElementById('view-card-link').href = `/view/${data.card.id}`;
+        // Clear form
+        clearForm();
+        // Reset validation state
+        this.classList.remove('was-validated');
+        // Scroll to top
+        window.scrollTo(0, 0);
+    })
+    .catch(error => {
+        alert(error.message || 'An error occurred while adding the card');
+    });
+});
+</script>
+{% endblock %} 
