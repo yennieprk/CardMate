@@ -1,0 +1,79 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="form-container">
+    <h1 class="mb-4">Edit Credit Card</h1>
+    <form id="edit-card-form" class="needs-validation" novalidate>
+        <input type="hidden" id="card-id" value="{{ card.id }}">
+        
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Card Name *</label>
+                <input type="text" class="form-control" id="name" value="{{ card.name }}" required>
+                <div class="invalid-feedback">Please enter the card name</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="issuer" class="form-label">Card Issuer *</label>
+                <input type="text" class="form-control" id="issuer" value="{{ card.issuer }}" required>
+                <div class="invalid-feedback">Please enter the card issuer</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="reward_type" class="form-label">Reward Type *</label>
+                <input type="text" class="form-control" id="reward_type" value="{{ card.reward_type }}" required>
+                <div class="invalid-feedback">Please enter the reward type</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="annual_fee" class="form-label">Annual Fee *</label>
+                <input type="number" class="form-control" id="annual_fee" value="{{ card.annual_fee }}" min="0" required>
+                <div class="invalid-feedback">Please enter a valid annual fee (must be a number)</div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="credit_score" class="form-label">Required Credit Score *</label>
+                <select class="form-select" id="credit_score" required>
+                    <option value="">Select credit score range</option>
+                    <option value="Poor" {% if card.credit_score_required == 'Poor' %}selected{% endif %}>Poor (300-579)</option>
+                    <option value="Fair" {% if card.credit_score_required == 'Fair' %}selected{% endif %}>Fair (580-669)</option>
+                    <option value="Good" {% if card.credit_score_required == 'Good' %}selected{% endif %}>Good (670-739)</option>
+                    <option value="Very Good" {% if card.credit_score_required == 'Very Good' %}selected{% endif %}>Very Good (740-799)</option>
+                    <option value="Excellent" {% if card.credit_score_required == 'Excellent' %}selected{% endif %}>Excellent (800-850)</option>
+                </select>
+                <div class="invalid-feedback">Please select a credit score range</div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="interest_rate" class="form-label">Interest Rate Range *</label>
+                <input type="text" class="form-control" id="interest_rate" value="{{ card.interest_rate }}" required>
+                <div class="invalid-feedback">Please enter the interest rate range</div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="image_url" class="form-label">Card Image URL *</label>
+            <input type="url" class="form-control" id="image_url" value="{{ card.image }}" required>
+            <div class="invalid-feedback">Please enter a valid image URL</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="apply_link" class="form-label">Application Link *</label>
+            <input type="url" class="form-control" id="apply_link" value="{{ card.apply_link }}" required>
+            <div class="invalid-feedback">Please enter a valid application URL</div>
+        </div>
+
+        <div class="mb-3">
+            <label for="benefits" class="form-label">Card Benefits *</label>
+            <textarea class="form-control" id="benefits" rows="4" required>{{ card.benefits | join('\n') }}</textarea>
+            <div class="invalid-feedback">Please enter at least one benefit</div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" class="btn btn-outline-danger" id="discard-changes">Discard Changes</button>
+        </div>
+    </form>
+</div>
+{% endblock %} 
