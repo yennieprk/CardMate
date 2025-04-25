@@ -13,7 +13,7 @@ CardMate is a card finder project that helps users discover credit cards best su
 ## Technologies
 - HTML/CSS
 - JavaScript
-- (Add more if needed!)
+- Python
 
 ## License
 [MIT License](LICENSE)
